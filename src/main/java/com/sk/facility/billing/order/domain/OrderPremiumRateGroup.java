@@ -7,12 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-public class PurchaseOrder {
-
+public class OrderPremiumRateGroup {
     @Id
     private Long id;
-
-    private Long pipeUnitId;
-
-    private Long mainSubPipeCostId;
 }

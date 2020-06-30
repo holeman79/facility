@@ -1,5 +1,6 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe;
 
+import com.sk.facility.billing.basis.domain.pipe.dto.WorkPipeLine;
 import lombok.Getter;
 
 import javax.persistence.*;

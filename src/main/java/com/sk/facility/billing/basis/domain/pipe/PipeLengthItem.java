@@ -1,4 +1,4 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe;
 
 import lombok.Getter;
 
@@ -14,12 +14,13 @@ public class PipeLengthItem {
 
     private String pipeType;
 
-    public boolean isEqualsPipeType(PipeType pipeType){
+    private BigDecimal pipeBranchQuantity;
 
+    public boolean isEqualsPipeType(String pipeType){
         return this.pipeType.equals(pipeType);
     }
 
-    public BigDecimal calculatePipeLength(BigDecimal lineMeter){
-        return null;
+    public BigDecimal calculatePipeLength(BigDecimal lineMeter, boolean isBranch){
+        return isBranch ? pipeBranchQuantity : null;
     }
 }

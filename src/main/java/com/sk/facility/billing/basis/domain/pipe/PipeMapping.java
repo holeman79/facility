@@ -1,11 +1,11 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe;
 
+import com.sk.facility.billing.basis.domain.pipe.dto.WorkPipeLine;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Getter

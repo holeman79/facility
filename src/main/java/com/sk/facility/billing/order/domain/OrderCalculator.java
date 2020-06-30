@@ -1,59 +1,53 @@
 package com.sk.facility.billing.order.domain;
 
-import com.sk.facility.billing.base.domain.pipe.*;
-import com.sk.facility.billing.base.repository.PipeUnitRepository;
+import com.sk.facility.billing.basis.domain.mainsub.MainSubPipeCost;
+import com.sk.facility.billing.basis.domain.pipe.*;
+import com.sk.facility.billing.basis.repository.MainSubPipeCostRepository;
+import com.sk.facility.billing.basis.repository.PipeUnitRepository;
 import com.sk.facility.billing.order.repository.PurchaseOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class OrderCalculator {
 
-    private final PurchaseOrderRepository purchaseOrderRepository;
+    private final EquipmentWorkCalculator equipmentWorkCalculator;
+    private final MainSubWorkCalculator mainSubWorkCalculator;
 
+    private final PurchaseOrderRepository purchaseOrderRepository;
     private final PipeUnitRepository pipeUnitRepository;
+    private final MainSubPipeCostRepository mainSubPipeCostRepository;
 
     public void calculateCost(Order order){
-        calculateCost(order, getPurchaseOrder(order));
+        calculateCost(order, getPipeUnitByOrder(order), getMainSubPipeCostByOrder(order));
     }
 
-    void calculateCost(Order order, PurchaseOrder purchaseOrder){
-        calculateCost(order, getPipeUnit(purchaseOrder));
-    }
-
-    void calculateCost(Order order, PipeUnit pipeUnit){
+    void calculateCost(Order order, PipeUnit pipeUnit, MainSubPipeCost mainSubPipeCost){
         for(OrderLineWork orderLineWork : order.getOrderLineWorks()){
-            calculateOrderLineWorkCost(orderLineWork, pipeUnit,getPipeMapping(), pipeUnit.getPipeLength(), pipeUnit.getPipeCost());
+            if(Objects.equals(orderLineWork.getWorkType(), "EQUIPMENT")) equipmentWorkCalculator.calculateEquipmentWorkCost(orderLineWork, pipeUnit);
+            else if(Objects.equals(orderLineWork.getWorkType(), "MAIN_SUB")) mainSubWorkCalculator.calculateMainSubWorkCost(orderLineWork, mainSubPipeCost);
         }
     }
-
-    private void calculateOrderLineWorkCost(OrderLineWork orderLineWork, PipeMapping pipeMapping, PipeLength pipeLength, PipeCost pipeCost){
-        setPipeTypeAndQuantity(orderLineWork, pipeMapping, pipeLength);
-    }
-
-    private void setPipeTypeAndQuantity(OrderLineWork orderLineWork, PipeMapping pipeMapping, PipeLength pipeLength){
-        for(OrderWorkPipeLine orderWorkPipeLine : orderLineWork.getOrderWorkPipeLines()){
-            PipeType pipeType = pipeMapping.findPipeType(orderWorkPipeLine.convertToWorkPipeLine());
-            BigDecimal lineQuantity = pipeLength.calculatePipeLength(pipeType, orderWorkPipeLine.getLineMeter());
-            orderWorkPipeLine.setPipeTypeAndLineQuantity(pipeType.getCode(), pipeType.getName(), lineQuantity);
-        }
-    }
-
-    private void setOrderLineWorkCost(OrderLineWork orderLineWorkCost, PipeCost pipeCost){
-        
-    }
-
 
     private PurchaseOrder getPurchaseOrder(Order order){
         return purchaseOrderRepository.findById(order.getPurchaseOrderId()).orElseThrow(IllegalArgumentException::new);
     }
 
-    private PipeUnit getPipeUnit(PurchaseOrder purchaseOrder){
+    private PipeUnit getPipeUnitByOrder(Order order){
+        PurchaseOrder purchaseOrder = getPurchaseOrder(order);
         return pipeUnitRepository.findById(purchaseOrder.getPipeUnitId()).orElseThrow(IllegalArgumentException::new);
     }
 
-
+    private MainSubPipeCost getMainSubPipeCostByOrder(Order order) {
+        PurchaseOrder purchaseOrder = getPurchaseOrder(order);
+        return mainSubPipeCostRepository.findById(purchaseOrder.getMainSubPipeCostId()).orElseThrow(IllegalArgumentException::new);
+    }
 }

@@ -1,4 +1,4 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe.dto;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe;
 
 import lombok.Getter;
 
@@ -17,11 +17,11 @@ public class PipeLength {
     @JoinColumn(name = "PIPE_LENGTH_ID")
     private List<PipeLengthItem> pipeLengthItems = new ArrayList<>();
 
-    public BigDecimal calculatePipeLength(PipeType pipeType, BigDecimal lineMeter){
+    public BigDecimal calculatePipeLength(String pipeType, BigDecimal lineMeter, boolean isBranch){
         return pipeLengthItems.stream()
                 .filter(pipeLengthItem -> pipeLengthItem.isEqualsPipeType(pipeType))
                 .findFirst()
                 .orElseGet(null)
-                .calculatePipeLength(lineMeter);
+                .calculatePipeLength(lineMeter, isBranch);
     }
 }

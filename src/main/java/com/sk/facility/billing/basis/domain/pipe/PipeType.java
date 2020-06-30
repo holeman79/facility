@@ -1,4 +1,4 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.pipe;
 
 import lombok.Getter;
 
@@ -12,4 +12,9 @@ public class PipeType {
     private String code;
 
     private String name;
+
+    public PipeType(String code, String name){
+        this.code = code;
+        this.name = name;
+    }
 }

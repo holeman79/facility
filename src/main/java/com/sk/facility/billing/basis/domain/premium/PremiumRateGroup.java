@@ -1,4 +1,4 @@
-package com.sk.facility.billing.base.domain.pipe;
+package com.sk.facility.billing.basis.domain.premium;
 
 import lombok.Getter;
 
@@ -7,8 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-public class PipeUnit {
-
+public class PremiumRateGroup {
     @Id
     private Long id;
 }
